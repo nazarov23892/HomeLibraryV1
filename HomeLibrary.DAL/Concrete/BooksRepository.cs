@@ -1,5 +1,9 @@
-﻿using HomeLibrary.AL.Repositories;
+﻿using Dapper;
+using HomeLibrary.AL.Repositories;
+using HomeLibrary.DAL.Models;
 using HomeLibrary.Domain.Entities;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Options;
 
 namespace HomeLibrary.DAL.Concrete;
 
@@ -8,26 +12,27 @@ namespace HomeLibrary.DAL.Concrete;
 /// </summary>
 public class BooksRepository : IBooksRepository
 {
-    /// <inheritdoc/>>
-    public Task<IEnumerable<Book>> GetAllAsync()
+    readonly DatabaseOptions _options;
+
+    public BooksRepository(
+        IOptions<DatabaseOptions> options)
     {
-        var list = new List<Book>();
-        for (var i = 0; i < 11; i++)
-        {
-            list.Add(
-                new Book()
-                {
-                    Id = 1 + i,
-                    Title = $"book-{1 + i}",
-                    Author = new Author()
-                    {
-                        Id = 1 + i,
-                        Name = $"author-{1 + i}",
-                    },
-                    PublishYear = 2000 + i,
-                }
-            );
-        }
-        return Task.FromResult((IEnumerable<Book>)list);
+        _options = options.Value;
+    }
+
+    /// <inheritdoc/>>
+    public async Task<IEnumerable<Book>> GetAllAsync()
+    {
+        const string sql =
+    $"""
+    select
+    b.{nameof(Book.Id)}, b.{nameof(Book.Title)}, b.{nameof(Book.PublishYear)}, b.{nameof(Book.TableOfContents)}
+    from Books b
+    """;
+
+        await using var connection = new SqlConnection(_options.ConnectionString);
+
+        var models = await connection.QueryAsync<Book>(sql);
+        return models;
     }
 }

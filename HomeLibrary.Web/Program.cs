@@ -3,6 +3,7 @@ using HomeLibrary.AL.Services;
 using HomeLibrary.AL.Services.Concrete;
 using HomeLibrary.DAL.Concrete;
 using HomeLibrary.DAL.DbContexts;
+using HomeLibrary.DAL.Models;
 using HomeLibrary.Web.SeedData;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     {
         opts.UseSqlServer(connectionString);
     });
+
+builder.Services.Configure<DatabaseOptions>(x => x.ConnectionString = connectionString!);
 
 // Services;
 builder.Services.AddScoped<IBookService, BookService>();
