@@ -5,7 +5,15 @@ namespace HomeLibrary.DAL.DbContexts;
 
 public class ApplicationDbContext : DbContext
 {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> opts)
+        : base(opts)
+    {
+
+    }
+
     public DbSet<Book> Books => Set<Book>();
+
+    public DbSet<Author> Authors => Set<Author>();
 
     /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
