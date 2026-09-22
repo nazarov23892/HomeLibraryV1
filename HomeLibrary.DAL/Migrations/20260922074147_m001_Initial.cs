@@ -49,6 +49,23 @@ namespace HomeLibrary.DAL.Migrations
                 name: "IX_Books_AuthorId",
                 table: "Books",
                 column: "AuthorId");
+
+            migrationBuilder.Sql(
+@"
+DROP PROCEDURE IF EXISTS [dbo].[Books_Search];
+
+
+GO
+
+CREATE PROCEDURE [dbo].[Books_Search]
+	@Query NVARCHAR(100) = NULL
+AS
+BEGIN
+  select
+    b.Id, b.Title, b.PublishYear, b.AuthorId, a.[Name] as AuthorName
+  from Books b left join Authors a on a.Id = b.AuthorId
+END
+");
         }
 
         /// <inheritdoc />

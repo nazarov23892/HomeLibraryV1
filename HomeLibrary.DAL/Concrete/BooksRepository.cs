@@ -4,6 +4,7 @@ using HomeLibrary.DAL.Models;
 using HomeLibrary.Domain.Entities;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using System.Data;
 
 namespace HomeLibrary.DAL.Concrete;
 
@@ -23,16 +24,13 @@ public class BooksRepository : IBooksRepository
     /// <inheritdoc/>>
     public async Task<IEnumerable<Book>> GetAllAsync()
     {
-        const string sql =
-    $"""
-    select
-    b.{nameof(Book.Id)}, b.{nameof(Book.Title)}, b.{nameof(Book.PublishYear)}, b.{nameof(Book.TableOfContents)}
-    from Books b
-    """;
-
+        const string storedProcedure = "Books_Search";
         await using var connection = new SqlConnection(_options.ConnectionString);
 
-        var models = await connection.QueryAsync<Book>(sql);
+        var models = await connection.QueryAsync<Book>(
+            storedProcedure, 
+            new { Query = string.Empty, },
+            commandType: CommandType.StoredProcedure);
         return models;
     }
 }
