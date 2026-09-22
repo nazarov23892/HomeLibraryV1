@@ -2,6 +2,7 @@
   <Folder Name="/Элементы решения/">
     <File Path=".gitignore" />
   </Folder>
+  <Project Path="HomeLibrary.AL/HomeLibrary.AL.csproj" Id="5a872830-1620-490b-86a4-6115a42cd7f0" />
   <Project Path="HomeLibrary.DAL/HomeLibrary.DAL.csproj" Id="d156fe70-3523-472f-9366-e2578d607999" />
   <Project Path="HomeLibrary.Domain/HomeLibrary.Domain.csproj" Id="bd3d60d2-5048-43a3-99a8-aa5c85519f70" />
   <Project Path="HomeLibrary.Web/HomeLibrary.Web.csproj" Id="40a14939-1f6a-468e-9c1a-0a0035a6ccb5" />
