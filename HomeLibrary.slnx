@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Folder Name="/Элементы решения/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="HomeLibrary.Domain/HomeLibrary.Domain.csproj" Id="bd3d60d2-5048-43a3-99a8-aa5c85519f70" />
+</Solution>
