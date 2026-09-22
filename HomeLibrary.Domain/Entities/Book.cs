@@ -7,12 +7,17 @@ public class Book
     /// <summary>
     /// Название.
     /// </summary>
-    public string Title { get; set; } = string.Empty;
+    public required string Title { get; set; } 
+
+    /// <summary>
+    /// Идентификатор автора.
+    /// </summary>
+    public long AuthorId { get; set; }
 
     /// <summary>
     /// Автор.
     /// </summary>
-    public string Author { get; set; } = string.Empty;
+    public Author? Author { get; set; }
 
     /// <summary>
     /// Год издания.
