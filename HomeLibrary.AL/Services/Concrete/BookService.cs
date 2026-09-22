@@ -1,4 +1,5 @@
 ﻿using HomeLibrary.AL.DTOs;
+using HomeLibrary.AL.Repositories;
 
 namespace HomeLibrary.AL.Services.Concrete;
 
@@ -7,23 +8,26 @@ namespace HomeLibrary.AL.Services.Concrete;
 /// </summary>
 public class BookService : IBookService
 {
+    readonly IBooksRepository _booksRepository;
+
+    public BookService(IBooksRepository booksRepository)
+    {
+        _booksRepository = booksRepository;
+    }
+
     /// <inheritdoc/>
-    public Task<IEnumerable<BookListDto>> GetListsAsync(
+    public async Task<IEnumerable<BookListDto>> GetListsAsync(
         CancellationToken cancellationToken)
     {
-        var list = new List<BookListDto>();
-        for (var i = 0; i < 11; i++)
-        {
-            list.Add(
-                new BookListDto()
-                {
-                    Id = 1 + i,
-                    Title = $"book-{1 + i}",
-                    Author = $"author-{1 + i}",
-                    PublishYear = 2000 + i,
-                }
-            );
-        }
-        return Task.FromResult((IEnumerable<BookListDto>)list);
+        var books = await _booksRepository.GetAllAsync();
+        var dtos = books.Select(
+            b => new BookListDto()
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Author = b.Author?.Name ?? string.Empty,
+                PublishYear = b.PublishYear,
+            }).ToList();    
+        return dtos;
     }
 }

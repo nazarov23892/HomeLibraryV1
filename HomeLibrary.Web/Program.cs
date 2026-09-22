@@ -1,5 +1,7 @@
+using HomeLibrary.AL.Repositories;
 using HomeLibrary.AL.Services;
 using HomeLibrary.AL.Services.Concrete;
+using HomeLibrary.DAL.Concrete;
 using HomeLibrary.DAL.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 // Services;
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 
 builder.Services.AddRazorPages();
 

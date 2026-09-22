@@ -13,11 +13,6 @@ public class BookListDto
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    /// Идентификатор автора.
-    /// </summary>
-    public long AuthorId { get; set; }
-
-    /// <summary>
     /// Автор.
     /// </summary>
     public string Author { get; set; } = string.Empty;
