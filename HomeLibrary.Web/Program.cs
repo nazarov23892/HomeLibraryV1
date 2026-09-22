@@ -1,3 +1,5 @@
+using HomeLibrary.AL.Services;
+using HomeLibrary.AL.Services.Concrete;
 using HomeLibrary.DAL.DbContexts;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +12,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     {
         opts.UseSqlServer(connectionString);
     });
+
+// Services;
+builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddRazorPages();
 

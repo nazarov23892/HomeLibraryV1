@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using HomeLibrary.AL.Services
 
 @model BooksModel
 
@@ -41,22 +42,17 @@ else
 
     public class BooksModel : PageModel
     {
-        public List<BookListDto> Books { get; private set; } = new();
+        readonly IBookService _bookService;
+        public IEnumerable<BookListDto> Books { get; private set; } = [];
 
-        public BooksModel()
+        public BooksModel(IBookService bookService)
         {
-            for (var i = 0; i < 10; i++)
-            {
-                Books.Add(
-                    new BookListDto()
-                        {
-                            Id = 1 + i,
-                            Title = $"book-{1 + i}",
-                            Author = $"author-{1 + i}",
-                            PublishYear = 2000 + i,
-                        }
-                );
-            }
+            _bookService = bookService;
+        }
+
+        public async Task OnGet(CancellationToken cancellationToken)
+        {
+            Books = await _bookService.GetListsAsync(cancellationToken);
         }
     }
 }
