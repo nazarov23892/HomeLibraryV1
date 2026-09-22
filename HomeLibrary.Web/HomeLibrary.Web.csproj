@@ -14,8 +14,12 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HomeLibrary.AL\HomeLibrary.AL.csproj" />
     <ProjectReference Include="..\HomeLibrary.DAL\HomeLibrary.DAL.csproj" />
-    <ProjectReference Include="..\HomeLibrary.Domain\HomeLibrary.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
 </Project>
