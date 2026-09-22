@@ -30,4 +30,22 @@ public class BookService : IBookService
             }).ToList();    
         return dtos;
     }
+
+    /// <inheritdoc/>
+    public async Task<BookDto?> GetByIdAsync(
+        long id, CancellationToken cancellationToken)
+    {
+        var book = await _booksRepository.GetByIdAsync(id);
+        if (book == null)
+            return null;
+        var dto = new BookDto()
+        {
+            Id = book.Id,
+            Title = book.Title,
+            Author = book.Author?.Name ?? string.Empty,
+            PublishYear = book.PublishYear,
+            TableOfContents = book.TableOfContents,
+        };
+        return dto;
+    }
 }

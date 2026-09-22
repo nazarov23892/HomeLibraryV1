@@ -66,6 +66,24 @@ BEGIN
   from Books b left join Authors a on a.Id = b.AuthorId
 END
 ");
+
+
+            migrationBuilder.Sql(
+@"
+DROP PROCEDURE IF EXISTS [dbo].[Books_GetById];
+
+
+GO
+
+CREATE PROCEDURE [dbo].[Books_GetById]
+	@Id BIGINT
+AS
+BEGIN
+  select
+    b.Id, b.Title, b.PublishYear, b.AuthorId, a.[Name] as AuthorName, a.TableOfContent
+  from Books b left join Authors a on a.Id = b.AuthorId
+END
+");
         }
 
         /// <inheritdoc />

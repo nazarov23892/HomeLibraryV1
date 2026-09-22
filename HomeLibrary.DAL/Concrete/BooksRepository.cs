@@ -28,9 +28,22 @@ public class BooksRepository : IBooksRepository
         await using var connection = new SqlConnection(_options.ConnectionString);
 
         var models = await connection.QueryAsync<Book>(
-            storedProcedure, 
+            storedProcedure,
             new { Query = string.Empty, },
             commandType: CommandType.StoredProcedure);
         return models;
+    }
+
+    /// <inheritdoc/>>
+    public async Task<Book?> GetByIdAsync(long id)
+    {
+        const string storedProcedure = "Books_GetById";
+        await using var connection = new SqlConnection(_options.ConnectionString);
+
+        var book = await connection.QueryFirstOrDefaultAsync<Book?>(
+            storedProcedure,
+            new { Id = id },
+            commandType: CommandType.StoredProcedure);
+        return book;
     }
 }

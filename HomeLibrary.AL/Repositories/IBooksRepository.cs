@@ -11,4 +11,10 @@ public interface IBooksRepository
     /// Возвращает список книг.
     /// </summary>
     Task<IEnumerable<Book>> GetAllAsync();
+
+    /// <summary>
+    /// Возвращает книгу по Id.
+    /// </summary>
+    /// <param name="id">Идентификатор.</param>
+    Task<Book?> GetByIdAsync(long id);
 }

@@ -13,4 +13,12 @@ public interface IBookService
     /// <param name="cancellationToken">Токен отмены операции.</param>
     Task<IEnumerable<BookListDto>> GetListsAsync(
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Возвращает книгу по идентификатору.
+    /// </summary>
+    /// <param name="id">Id.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    Task<BookDto?> GetByIdAsync(
+        long id, CancellationToken cancellationToken);
 }
