@@ -62,7 +62,7 @@ CREATE PROCEDURE [dbo].[Books_Search]
 AS
 BEGIN
   select
-    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Name] as AuthorName
+    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name]
   from Books b left join Authors a on a.[Id] = b.AuthorId
 END
 ");

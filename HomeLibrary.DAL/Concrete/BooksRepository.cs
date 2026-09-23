@@ -46,9 +46,15 @@ public class BooksRepository : IBooksRepository
         const string storedProcedure = "Books_Search";
         await using var connection = new SqlConnection(_options.ConnectionString);
 
-        var models = await connection.QueryAsync<Book>(
+        var models = await connection.QueryAsync<Book, Author, Book>(
             storedProcedure,
-            new { Query = string.Empty, },
+            (book, author) =>
+            {
+                book.Author = author;
+                return book;
+            },
+            splitOn: nameof(Book.AuthorId),
+            param: new { Query = string.Empty, },
             commandType: CommandType.StoredProcedure);
         return models;
     }
