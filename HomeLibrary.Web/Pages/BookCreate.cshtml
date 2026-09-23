@@ -22,26 +22,26 @@
                 <div class="card-body">
 
                     <div class="mb-3">
-                        <label asp-for="BookPut.Title" class="form-label">Название</label>
-                        <input asp-for="BookPut.Title" class="form-control" />
-                        <span asp-validation-for="BookPut.Title" class="text-danger small"></span>
+                        <label asp-for="BookPost.Title" class="form-label">Название</label>
+                        <input asp-for="BookPost.Title" class="form-control" />
+                        <span asp-validation-for="BookPost.Title" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="BookPut.Author" class="form-label">Автор</label>
-                        <input asp-for="BookPut.Author" class="form-control" />
-                        <span asp-validation-for="BookPut.Author" class="text-danger small"></span>
+                        <label asp-for="BookPost.Author" class="form-label">Автор</label>
+                        <input asp-for="BookPost.Author" class="form-control" />
+                        <span asp-validation-for="BookPost.Author" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="BookPut.PublishYear" class="form-label">Год издания</label>
-                        <input asp-for="BookPut.PublishYear" type="number" class="form-control" />
-                        <span asp-validation-for="BookPut.PublishYear" class="text-danger small"></span>
+                        <label asp-for="BookPost.PublishYear" class="form-label">Год издания</label>
+                        <input asp-for="BookPost.PublishYear" type="number" class="form-control" />
+                        <span asp-validation-for="BookPost.PublishYear" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="BookPut.TableOfContents" class="form-label">Оглавление (XML)</label>
-                        <textarea asp-for="BookPut.TableOfContents" class="form-control" rows="6"></textarea>
+                        <label asp-for="BookPost.TableOfContents" class="form-label">Оглавление (XML)</label>
+                        <textarea asp-for="BookPost.TableOfContents" class="form-control" rows="6"></textarea>
                     </div>
                 </div>
 
@@ -67,7 +67,7 @@
         }
 
         [BindProperty]
-        public BookPutDto BookPut { get; set; } = new();
+        public BookPostDto BookPost { get; set; } = new();
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -76,7 +76,7 @@
 
             try
             {
-                _ = await _bookService.CreateAsync(BookPut);
+                _ = await _bookService.CreateAsync(BookPost);
             }
             catch (Exception)
             {

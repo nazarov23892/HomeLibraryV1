@@ -23,7 +23,7 @@ public class BookService : IBookService
 
     /// <inheritdoc/>
     public async Task<BookDto> CreateAsync(
-        BookPutDto value, CancellationToken cancellationToken)
+        BookPostDto value, CancellationToken cancellationToken)
     {
         var author = await _authorsRepository.FindByNameAsync(
             value.Author)

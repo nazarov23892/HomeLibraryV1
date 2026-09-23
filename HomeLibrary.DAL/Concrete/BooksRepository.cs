@@ -85,4 +85,23 @@ public class BooksRepository : IBooksRepository
         var book = records.FirstOrDefault();
         return book;
     }
+
+    /// <inheritdoc/>>
+    public async Task UpdateAsync(Book book)
+    {
+        const string storedProcedure = "Books_Update";
+        await using var connection = new SqlConnection(_options.ConnectionString);
+
+        var result = await connection.QuerySingleAsync(
+            storedProcedure,
+            param: new
+            {
+                book.Id,
+                book.Title,
+                book.PublishYear,
+                book.TableOfContents,
+                book.AuthorId,
+            }, 
+            commandType:CommandType.StoredProcedure);
+    }
 }

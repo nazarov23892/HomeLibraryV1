@@ -24,4 +24,10 @@ public interface IBooksRepository
     /// </summary>
     /// <param name="id">Идентификатор.</param>
     Task<Book?> GetByIdAsync(long id);
+
+    /// <summary>
+    /// Обновляет книгу.
+    /// </summary>
+    /// <param name="book">Модель книги.</param>
+    Task UpdateAsync(Book book);
 }

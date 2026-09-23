@@ -3,7 +3,7 @@
 /// <summary>
 /// Модель книги для создания.
 /// </summary>
-public class BookPutDto
+public class BookPostDto
 {
     /// <summary>
     /// Название.
