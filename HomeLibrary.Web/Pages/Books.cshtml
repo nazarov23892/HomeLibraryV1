@@ -7,37 +7,42 @@
     Layout = "_Layout";
 }
 
-<h1 class="mb-4"> Список книг</h1>
+<div class="container">
+    <h1 class="mb-4"> Список книг</h1>
 
-@if (!Model.Books.Any())
-{
-    <div class="alert alert-info">Книг пока нет.</div>
-}
-else
-{
-    <table class="table table-sm table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Название</th>
-                <th>Автор</th>
-                <th>Год</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Model.Books)
-            {
+    @if (!Model.Books.Any())
+    {
+        <div class="alert alert-info">Книг пока нет.</div>
+    }
+    else
+    {
+        <table class="table table-sm table-bordered table-striped">
+            <thead>
                 <tr>
-                    <td>@book.Id</td>
-                    <td>@book.Title</td>
-                    <td>@book.Author</td>
-                    <td>@book.PublishYear</td>
+                    <th>#</th>
+                    <th>Название</th>
+                    <th>Автор</th>
+                    <th>Год</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Books)
+                {
+                    <tr>
+                        <td>@book.Id</td>
+                        <td>@book.Title</td>
+                        <td>@book.Author</td>
+                        <td>@book.PublishYear</td>
+                        <td>
+                            <a class="btn btn-info btn-sm"
+                               asp-page="BookDetails" asp-route-id="@book.Id">Просмотр</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
 @functions {
 
     public class BooksModel : PageModel
