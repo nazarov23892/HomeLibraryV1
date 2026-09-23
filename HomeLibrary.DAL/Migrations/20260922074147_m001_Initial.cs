@@ -62,8 +62,8 @@ CREATE PROCEDURE [dbo].[Books_Search]
 AS
 BEGIN
   select
-    b.Id, b.Title, b.PublishYear, b.AuthorId, a.[Name] as AuthorName
-  from Books b left join Authors a on a.Id = b.AuthorId
+    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Name] as AuthorName
+  from Books b left join Authors a on a.[Id] = b.AuthorId
 END
 ");
 
@@ -80,10 +80,37 @@ CREATE PROCEDURE [dbo].[Books_GetById]
 AS
 BEGIN
   select top(1)
-    b.Id, b.Title, b.PublishYear, b.AuthorId, a.[Name] as AuthorName, b.TableOfContents
-  from Books b left join Authors a on a.Id = b.AuthorId
-  where b.Id = @Id
+    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Name] as AuthorName, b.[TableOfContents]
+  from Books b left join Authors a on a.[Id] = b.[AuthorId]
+  where b.[Id] = @Id
 END
+");
+
+            migrationBuilder.Sql(
+@"
+DROP PROCEDURE IF EXISTS [dbo].[Books_Create];
+
+GO
+
+CREATE PROCEDURE [dbo].[Books_Create]
+    @Title            NVARCHAR(500),
+    @PublishYear      INT,
+    @TableOfContents  xml,
+	@AuthorId		  BIGINT,
+    @NewId            BIGINT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF NOT EXISTS (SELECT 1 FROM [Authors] WHERE [Id] = @AuthorId)
+        THROW 50001, N'Author not found.', 1;
+
+    INSERT INTO [Books] ([Title], [AuthorId], [PublishYear], [TableOfContents])
+    VALUES (@Title, @AuthorId, @PublishYear, @TableOfContents);
+
+    SET @NewId = SCOPE_IDENTITY();
+END;
+
 ");
         }
 
