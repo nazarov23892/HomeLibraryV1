@@ -1,0 +1,63 @@
+﻿@page "/books/create"
+
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model BookCreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Создание";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Просмотр книги</h5>
+                </div>
+
+                <form class="card-body" method="post">
+
+                    <div class="mb-3">
+                        <label asp-for="BookPut.Title" class="form-label">Название</label>
+                        <input asp-for="BookPut.Title" class="form-control" />
+                        <span asp-validation-for="BookPut.Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BookPut.Author" class="form-label">Автор</label>
+                        <input asp-for="BookPut.Author" class="form-control"  />
+                        <span asp-validation-for="BookPut.Author" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BookPut.PublishYear" class="form-label">Год издания</label>
+                        <input asp-for="BookPut.PublishYear" type="number" class="form-control" />
+                        <span asp-validation-for="BookPut.PublishYear" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="BookPut.TableOfContents" class="form-label">Оглавление (XML)</label>
+                        <textarea asp-for="BookPut.TableOfContents" class="form-control" rows="6" ></textarea>
+                    </div>
+                </form>
+
+                <div class="card-footer d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a asp-page="Books" class="btn btn-secondary">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+
+    public class BookCreateModel : PageModel
+    {
+        public BookPutDto BookPut { get; private set; } = new();
+    }
+}
