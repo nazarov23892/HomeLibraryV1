@@ -13,14 +13,14 @@ public interface IBookService
     /// <param name="value">Модель для создания.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     Task<BookDto> CreateAsync(
-        BookPutDto value, CancellationToken cancellationToken);
+        BookPutDto value, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Возвращает список книг.
     /// </summary>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     Task<IEnumerable<BookListDto>> GetListsAsync(
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Возвращает книгу по идентификатору.
@@ -28,5 +28,5 @@ public interface IBookService
     /// <param name="id">Id.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
     Task<BookDto?> GetByIdAsync(
-        long id, CancellationToken cancellationToken);
+        long id, CancellationToken cancellationToken = default);
 }

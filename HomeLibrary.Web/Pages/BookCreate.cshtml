@@ -1,5 +1,6 @@
 ﻿@page "/books/create"
 
+@using HomeLibrary.AL.Services
 @using Microsoft.AspNetCore.Mvc.RazorPages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -14,12 +15,13 @@
     <div class="row justify-content-center">
         <div class="col-lg-7">
 
-            <div class="card shadow-sm">
+            <form class="card shadow-sm" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="card-header">
                     <h5 class="mb-0">Просмотр книги</h5>
                 </div>
 
-                <form class="card-body" method="post">
+                <div class="card-body" >
 
                     <div class="mb-3">
                         <label asp-for="BookPut.Title" class="form-label">Название</label>
@@ -29,7 +31,7 @@
 
                     <div class="mb-3">
                         <label asp-for="BookPut.Author" class="form-label">Автор</label>
-                        <input asp-for="BookPut.Author" class="form-control"  />
+                        <input asp-for="BookPut.Author" class="form-control" />
                         <span asp-validation-for="BookPut.Author" class="text-danger small"></span>
                     </div>
 
@@ -41,15 +43,15 @@
 
                     <div class="mb-3">
                         <label asp-for="BookPut.TableOfContents" class="form-label">Оглавление (XML)</label>
-                        <textarea asp-for="BookPut.TableOfContents" class="form-control" rows="6" ></textarea>
+                        <textarea asp-for="BookPut.TableOfContents" class="form-control" rows="6"></textarea>
                     </div>
-                </form>
+                </div>
 
                 <div class="card-footer d-flex gap-2">
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a asp-page="Books" class="btn btn-secondary">Назад</a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -58,6 +60,32 @@
 
     public class BookCreateModel : PageModel
     {
-        public BookPutDto BookPut { get; private set; } = new();
+        readonly IBookService _bookService;
+
+        public BookCreateModel(
+            IBookService bookService)
+        {
+            _bookService = bookService;
+        }
+
+        [BindProperty]
+        public BookPutDto BookPut { get; set; } = new();
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            try
+            {
+                _ = await _bookService.CreateAsync(BookPut);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while saving.");
+                return Page();
+            }
+            return RedirectToPage("Books");
+        }
     }
 }
