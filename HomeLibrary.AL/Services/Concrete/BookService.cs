@@ -71,6 +71,7 @@ public class BookService : IBookService
             Page = pagedBooks.Page,
             PerPage = pagedBooks.PerPage,
             Items = dtos,
+            TotalCount = pagedBooks.TotalCount,
         };
         return result;
     }

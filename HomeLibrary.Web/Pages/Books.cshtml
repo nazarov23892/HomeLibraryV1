@@ -62,6 +62,20 @@
             </tbody>
         </table>
     }
+    <div class="d-flex justify-content-center gap-1 mt-3">
+        @{
+            int itemPage = 0;
+            do
+            {
+                var i = itemPage + 1;
+                <a class="btn btn-sm @(i == Model.PageNo ? "btn-primary" : "btn-outline-primary")"
+                   asp-page="Books" asp-route-pageNo="@i" asp-route-searchString="@Model.SearchString">
+                    @i
+                </a>
+                itemPage++;
+            } while (itemPage < Model.PagedBooks.TotalPages);
+        }
+    </div>
 </div>
 @functions {
 
@@ -83,7 +97,7 @@
 
         public PagedListResponseDto<BookListDto> PagedBooks { get; private set; } = new();
 
-            public async Task OnGet(CancellationToken cancellationToken)
+        public async Task OnGet(CancellationToken cancellationToken)
         {
             PagedBooks = await _bookService.GetListAsync(
                 PageNo, PerPage, SearchString, cancellationToken);
