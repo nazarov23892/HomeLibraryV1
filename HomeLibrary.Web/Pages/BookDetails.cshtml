@@ -1,0 +1,75 @@
+﻿@page "/books/{id:long}"
+
+@using HomeLibrary.AL.Services
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model BookDetailsModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Просмотр";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">Просмотр книги</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+                        <label asp-for="Book.Title" class="form-label">Название</label>
+                        <input asp-for="Book.Title" class="form-control" readonly disabled />
+                        <span asp-validation-for="Book.Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Book.Author" class="form-label">Автор</label>
+                        <input asp-for="Book.Author" class="form-control" readonly disabled />
+                        <span asp-validation-for="Book.Author" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Book.PublishYear" class="form-label">Год издания</label>
+                        <input asp-for="Book.PublishYear" type="number" class="form-control" readonly disabled />
+                        <span asp-validation-for="Book.PublishYear" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Book.TableOfContents" class="form-label">Оглавление (XML)</label>
+                        <textarea asp-for="Book.TableOfContents" class="form-control" rows="6" readonly disabled></textarea>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex gap-2">
+                    <a asp-page="Books" class="btn btn-secondary">Назад</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions {
+
+    public class BookDetailsModel : PageModel
+    {
+        readonly IBookService _bookService;
+        public BookDto? Book { get; private set; }
+
+        public BookDetailsModel(IBookService bookService)
+        {
+            _bookService = bookService;
+        }
+
+        public async Task OnGet(long id, CancellationToken cancellationToken)
+        {
+            Book = await _bookService.GetByIdAsync(id, cancellationToken);
+        }
+    }
+}
