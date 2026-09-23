@@ -67,12 +67,11 @@ public class BookService : IBookService
     }
 
     /// <inheritdoc/>
-    public async Task<BookDto?> GetByIdAsync(
+    public async Task<BookDto> GetByIdAsync(
         long id, CancellationToken cancellationToken)
     {
-        var book = await _booksRepository.GetByIdAsync(id);
-        if (book == null)
-            return null;
+        var book = await _booksRepository.GetByIdAsync(id)
+            ?? throw new NotFoundException($"Book {id} not found.");
         var dto = new BookDto()
         {
             Id = book.Id,
@@ -82,5 +81,25 @@ public class BookService : IBookService
             TableOfContents = book.TableOfContents,
         };
         return dto;
+    }
+
+    /// <inheritdoc/>
+    public async Task UpdateAsync(
+        long id, BookPutDto value, CancellationToken cancellationToken = default)
+    {
+        var author = await _authorsRepository.FindByNameAsync(
+            value.Author)
+            ?? throw new FailedPreconditionException(
+                $"Author not found.");
+
+        var book = new Book()
+        {
+            Id = id,
+            Title = value.Title,
+            PublishYear = value.PublishYear,
+            TableOfContents = value.TableOfContents,
+            AuthorId = author.Id,
+        };
+        await _booksRepository.UpdateAsync(book);
     }
 }

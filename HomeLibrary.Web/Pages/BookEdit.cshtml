@@ -1,0 +1,101 @@
+﻿@page "/books/edit/{id:long}"
+
+@using HomeLibrary.AL.Services
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model BookCreateModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Редактирование";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <form class="card shadow-sm" method="post">
+                <div class="card-header">
+                    <h5 class="mb-0">Редактирование книги</h5>
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="card-body">
+
+                    <div class="mb-3">
+                        <label asp-for="Book.Title" class="form-label">Название</label>
+                        <input asp-for="Book.Title" class="form-control" />
+                        <span asp-validation-for="Book.Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Book.Author" class="form-label">Автор</label>
+                        <input asp-for="Book.Author" class="form-control" />
+                        <span asp-validation-for="Book.Author" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Book.PublishYear" class="form-label">Год издания</label>
+                        <input asp-for="Book.PublishYear" type="number" class="form-control" />
+                        <span asp-validation-for="Book.PublishYear" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Book.TableOfContents" class="form-label">Оглавление (XML)</label>
+                        <textarea asp-for="Book.TableOfContents" class="form-control" rows="6"></textarea>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a asp-page="Books" class="btn btn-secondary">Назад</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@functions {
+
+    public class BookCreateModel : PageModel
+    {
+        readonly IBookService _bookService;
+
+        public BookCreateModel(
+            IBookService bookService)
+        {
+            _bookService = bookService;
+        }
+
+        [BindProperty]
+        public BookDto Book { get; set; } = new();
+
+        public async Task OnGet(long id, CancellationToken cancellationToken)
+        {
+            Book = await _bookService.GetByIdAsync(id, cancellationToken);
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+                return Page();
+
+            try
+            {
+                var putModel = new BookPutDto()
+                {
+                    Title = Book.Title,
+                    PublishYear = Book.PublishYear,
+                    TableOfContents = Book.TableOfContents,
+                    Author = Book.Author,
+                };
+                await _bookService.UpdateAsync(Book.Id, putModel);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occurred while saving.");
+                return Page();
+            }
+            return RedirectToPage("Books");
+        }
+    }
+}

@@ -29,6 +29,15 @@ public interface IBookService
     /// </summary>
     /// <param name="id">Id.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    Task<BookDto?> GetByIdAsync(
+    Task<BookDto> GetByIdAsync(
         long id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Обновляет книгу.
+    /// </summary>
+    /// <param name="id">Id.</param>
+    /// <param name="value">Модель для обновления.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    Task UpdateAsync(
+        long id, BookPutDto value, CancellationToken cancellationToken = default);
 }
