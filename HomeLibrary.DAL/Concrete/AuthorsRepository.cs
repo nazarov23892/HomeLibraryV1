@@ -22,6 +22,18 @@ public class AuthorsRepository : IAuthorsRepository
     }
 
     /// <inheritdoc/>>
+    public async Task<Author> CreateAsync(Author author)
+    {
+        const string storedProcedure = "Authors_Create";
+        await using var connection = new SqlConnection(_options.ConnectionString);
+        var model = await connection.QuerySingleAsync<Author>(
+            storedProcedure,
+            param: new { author.Name },
+            commandType: CommandType.StoredProcedure);
+        return model;
+    }
+
+    /// <inheritdoc/>>
     public async Task<Author?> FindByNameAsync(
         string name)
     {

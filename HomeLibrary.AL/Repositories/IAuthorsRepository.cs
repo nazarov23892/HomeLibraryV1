@@ -12,4 +12,10 @@ public interface IAuthorsRepository
     /// </summary>
     /// <param name="name">Имя.</param>
     Task<Author?> FindByNameAsync(string name);
+
+    /// <summary>
+    /// Сохраняет автора.
+    /// </summary>
+    /// <param name="author">Модель автора.</param>
+    Task<Author> CreateAsync(Author author);
 }

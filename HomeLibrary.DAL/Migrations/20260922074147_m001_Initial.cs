@@ -161,6 +161,31 @@ BEGIN
     SELECT @@ROWCOUNT
 END;
 ");
+
+            migrationBuilder.Sql(
+@"
+DROP PROCEDURE IF EXISTS [dbo].[Authors_Create];
+
+GO
+
+CREATE PROCEDURE [dbo].[Authors_Create]
+    @Name NVARCHAR(200)
+AS
+
+BEGIN
+	DECLARE @NewId BIGINT;
+    SET NOCOUNT ON;
+
+    INSERT INTO [Authors] ([Name])
+    VALUES (@Name);
+    SET @NewId = SCOPE_IDENTITY();
+
+    select top(1) 
+	a.[Id], a.[Name]
+	from [Authors] a 
+	where a.[Id] = @NewId
+END;
+");
         }
 
         /// <inheritdoc />
