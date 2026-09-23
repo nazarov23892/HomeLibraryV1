@@ -10,6 +10,11 @@
 <div class="container">
     <h1 class="mb-4"> Список книг</h1>
 
+    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+        <a class="btn btn-sm btn-outline-primary" asp-page="BookCreate">
+            Добавить книгу
+        </a>
+    </div>
     @if (!Model.Books.Any())
     {
         <div class="alert alert-info">Книг пока нет.</div>
