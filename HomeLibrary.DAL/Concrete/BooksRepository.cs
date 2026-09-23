@@ -48,7 +48,7 @@ public class BooksRepository : IBooksRepository
 
         var models = await connection.QueryAsync<Book, Author, Book>(
             storedProcedure,
-            (book, author) =>
+            map: (book, author) =>
             {
                 book.Author = author;
                 return book;
@@ -65,10 +65,17 @@ public class BooksRepository : IBooksRepository
         const string storedProcedure = "Books_GetById";
         await using var connection = new SqlConnection(_options.ConnectionString);
 
-        var book = await connection.QuerySingleOrDefaultAsync<Book>(
+        var records = await connection.QueryAsync<Book, Author, Book>(
             storedProcedure,
-            new { Id = id },
+            map: (book, author) =>
+            {
+                book.Author = author;
+                return book;
+            },
+            splitOn: nameof(Book.AuthorId),
+            param: new { Id = id },
             commandType: CommandType.StoredProcedure);
+        var book = records.FirstOrDefault();
         return book;
     }
 }

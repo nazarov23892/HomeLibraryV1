@@ -80,7 +80,7 @@ CREATE PROCEDURE [dbo].[Books_GetById]
 AS
 BEGIN
   select top(1)
-    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Name] as AuthorName, b.[TableOfContents]
+    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name], b.[TableOfContents]
   from Books b left join Authors a on a.[Id] = b.[AuthorId]
   where b.[Id] = @Id
 END
