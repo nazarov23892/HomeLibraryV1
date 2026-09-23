@@ -80,7 +80,7 @@
             {
                 _ = await _bookService.CreateAsync(BookPut);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while saving.");
                 return Page();

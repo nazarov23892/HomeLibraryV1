@@ -29,6 +29,13 @@ public class BooksRepository : IBooksRepository
 
         var book = await connection.QuerySingleAsync<Book>(
             storedProcedure,
+            new 
+            {
+                newBook.Title,
+                newBook.PublishYear,
+                newBook.TableOfContents,
+                newBook.AuthorId,
+            },
             commandType: CommandType.StoredProcedure);
         return book;
     }

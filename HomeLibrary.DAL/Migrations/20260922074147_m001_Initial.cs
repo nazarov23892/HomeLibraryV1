@@ -96,19 +96,22 @@ CREATE PROCEDURE [dbo].[Books_Create]
     @Title            NVARCHAR(500),
     @PublishYear      INT,
     @TableOfContents  xml,
-	@AuthorId		  BIGINT,
-    @NewId            BIGINT OUTPUT
+	@AuthorId		  BIGINT
 AS
-BEGIN
-    SET NOCOUNT ON;
 
+BEGIN
+	DECLARE @NewId BIGINT;
+    SET NOCOUNT ON;
     IF NOT EXISTS (SELECT 1 FROM [Authors] WHERE [Id] = @AuthorId)
         THROW 50001, N'Author not found.', 1;
-
     INSERT INTO [Books] ([Title], [AuthorId], [PublishYear], [TableOfContents])
     VALUES (@Title, @AuthorId, @PublishYear, @TableOfContents);
-
     SET @NewId = SCOPE_IDENTITY();
+
+	select top(1)
+	b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Name] as AuthorName, b.[TableOfContents]
+	from Books b left join Authors a on a.[Id] = b.[AuthorId]
+	where b.[Id] = @NewId
 END;
 
 ");
