@@ -18,8 +18,10 @@ public interface IBookService
     /// <summary>
     /// Возвращает список книг.
     /// </summary>
+    /// <param name="searchString">Строка поиска.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    Task<IEnumerable<BookListDto>> GetListsAsync(
+    Task<IEnumerable<BookListDto>> GetListAsync(
+        string? searchString,
         CancellationToken cancellationToken = default);
 
     /// <summary>

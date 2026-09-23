@@ -50,10 +50,11 @@ public class BookService : IBookService
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<BookListDto>> GetListsAsync(
+    public async Task<IEnumerable<BookListDto>> GetListAsync(
+        string? searchString,
         CancellationToken cancellationToken)
     {
-        var books = await _booksRepository.GetAllAsync();
+        var books = await _booksRepository.GetAllAsync(searchString);
         var dtos = books.Select(
             b => new BookListDto()
             {

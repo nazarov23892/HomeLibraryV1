@@ -58,12 +58,13 @@ DROP PROCEDURE IF EXISTS [dbo].[Books_Search];
 GO
 
 CREATE PROCEDURE [dbo].[Books_Search]
-	@Query NVARCHAR(100) = NULL
+	@SearchString NVARCHAR(100) = NULL
 AS
 BEGIN
   select
     b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name]
   from Books b left join Authors a on a.[Id] = b.AuthorId
+  where @SearchString IS NULL OR LOWER(b.[Title]) LIKE CONCAT('%', LOWER(@SearchString), '%')
 END
 ");
 

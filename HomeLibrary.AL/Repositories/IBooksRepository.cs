@@ -16,7 +16,8 @@ public interface IBooksRepository
     /// <summary>
     /// Возвращает список книг.
     /// </summary>
-    Task<IEnumerable<Book>> GetAllAsync();
+    /// <param name="searchString">Строка поиска.</param>
+    Task<IEnumerable<Book>> GetAllAsync(string? searchString);
 
     /// <summary>
     /// Возвращает книгу по Id.

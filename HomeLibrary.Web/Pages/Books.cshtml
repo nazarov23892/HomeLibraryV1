@@ -10,11 +10,24 @@
 <div class="container">
     <h1 class="mb-4"> Список книг</h1>
 
+    <form method="get" class="mb-3">
+        <div class="input-group">
+            <input type="text"
+                   name="searchString"
+                   class="form-control"
+                   placeholder="Поиск по названию, автору, содержанию..."
+                   value="@Model.SearchString" />
+            <button type="submit" class="btn btn-outline-primary">Найти</button>
+            <a asp-page="Books" class="btn btn-outline-secondary">Сброс</a>
+        </div>
+    </form>
+
     <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
         <a class="btn btn-sm btn-outline-primary" asp-page="BookCreate">
             Добавить книгу
         </a>
     </div>
+
     @if (!Model.Books.Any())
     {
         <div class="alert alert-info">Книг пока нет.</div>
@@ -60,9 +73,12 @@
             _bookService = bookService;
         }
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+
         public async Task OnGet(CancellationToken cancellationToken)
         {
-            Books = await _bookService.GetListsAsync(cancellationToken);
+            Books = await _bookService.GetListAsync(SearchString, cancellationToken);
         }
     }
 }

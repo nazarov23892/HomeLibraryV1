@@ -48,7 +48,7 @@ public class BooksRepository : IBooksRepository
     }
 
     /// <inheritdoc/>>
-    public async Task<IEnumerable<Book>> GetAllAsync()
+    public async Task<IEnumerable<Book>> GetAllAsync(string? searchString)
     {
         const string storedProcedure = "Books_Search";
         await using var connection = new SqlConnection(_options.ConnectionString);
@@ -61,7 +61,7 @@ public class BooksRepository : IBooksRepository
                 return book;
             },
             splitOn: nameof(Book.AuthorId),
-            param: new { Query = string.Empty, },
+            param: new { SearchString = searchString, },
             commandType: CommandType.StoredProcedure);
         return models;
     }
