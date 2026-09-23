@@ -64,7 +64,9 @@ BEGIN
   select
     b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name]
   from Books b left join Authors a on a.[Id] = b.AuthorId
-  where @SearchString IS NULL OR LOWER(b.[Title]) LIKE CONCAT('%', LOWER(@SearchString), '%')
+  where @SearchString IS NULL 
+  OR LOWER(b.[Title]) LIKE CONCAT('%', LOWER(@SearchString), '%')
+  OR LOWER(a.[Name]) LIKE CONCAT('%', LOWER(@SearchString), '%')
 END
 ");
 
