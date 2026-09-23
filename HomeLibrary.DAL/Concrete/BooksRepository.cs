@@ -27,9 +27,15 @@ public class BooksRepository : IBooksRepository
         const string storedProcedure = "Books_Create";
         await using var connection = new SqlConnection(_options.ConnectionString);
 
-        var book = await connection.QuerySingleAsync<Book>(
+        var results = await connection.QueryAsync<Book, Author, Book>(
             storedProcedure,
-            new 
+            map: (book, author) =>
+            {
+                book.Author = author;
+                return book;
+            },
+            splitOn: nameof(Book.AuthorId),
+            param: new
             {
                 newBook.Title,
                 newBook.PublishYear,
@@ -37,6 +43,7 @@ public class BooksRepository : IBooksRepository
                 newBook.AuthorId,
             },
             commandType: CommandType.StoredProcedure);
+        var book = results.Single();
         return book;
     }
 

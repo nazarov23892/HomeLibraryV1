@@ -108,10 +108,10 @@ BEGIN
     VALUES (@Title, @AuthorId, @PublishYear, @TableOfContents);
     SET @NewId = SCOPE_IDENTITY();
 
-	select top(1)
-	b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Name] as AuthorName, b.[TableOfContents]
-	from Books b left join Authors a on a.[Id] = b.[AuthorId]
-	where b.[Id] = @NewId
+  select top(1)
+    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name], b.[TableOfContents]
+  from Books b left join Authors a on a.[Id] = b.[AuthorId]
+  where b.[Id] = @NewId
 END;
 
 ");
