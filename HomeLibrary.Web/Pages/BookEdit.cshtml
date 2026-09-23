@@ -20,7 +20,7 @@
                 </div>
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="card-body">
-
+                    <input type="hidden" asp-for="Book.Id" />
                     <div class="mb-3">
                         <label asp-for="Book.Title" class="form-label">Название</label>
                         <input asp-for="Book.Title" class="form-control" />
