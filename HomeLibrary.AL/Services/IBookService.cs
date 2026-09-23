@@ -8,6 +8,14 @@ namespace HomeLibrary.AL.Services;
 public interface IBookService
 {
     /// <summary>
+    /// Создает книгу.
+    /// </summary>
+    /// <param name="value">Модель для создания.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    Task<BookDto> CreateAsync(
+        BookPutDto value, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Возвращает список книг.
     /// </summary>
     /// <param name="cancellationToken">Токен отмены операции.</param>

@@ -112,6 +112,24 @@ BEGIN
 END;
 
 ");
+
+            migrationBuilder.Sql(
+@"
+DROP PROCEDURE IF EXISTS [dbo].[Authors_FindByName];
+
+GO
+
+CREATE PROCEDURE [dbo].[Authors_FindByName]
+	@Name VARCHAR(200)
+AS
+BEGIN
+  select top(1)
+    a.[Id], a.[Name]
+  from Authors a 
+  where a.[Name] = @Name
+END
+
+");
         }
 
         /// <inheritdoc />

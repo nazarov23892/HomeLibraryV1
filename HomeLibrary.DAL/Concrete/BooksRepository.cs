@@ -22,6 +22,18 @@ public class BooksRepository : IBooksRepository
     }
 
     /// <inheritdoc/>>
+    public async Task<Book> CreateAsync(Book newBook)
+    {
+        const string storedProcedure = "Books_Create";
+        await using var connection = new SqlConnection(_options.ConnectionString);
+
+        var book = await connection.QuerySingleAsync<Book>(
+            storedProcedure,
+            commandType: CommandType.StoredProcedure);
+        return book;
+    }
+
+    /// <inheritdoc/>>
     public async Task<IEnumerable<Book>> GetAllAsync()
     {
         const string storedProcedure = "Books_Search";
@@ -40,7 +52,7 @@ public class BooksRepository : IBooksRepository
         const string storedProcedure = "Books_GetById";
         await using var connection = new SqlConnection(_options.ConnectionString);
 
-        var book = await connection.QueryFirstOrDefaultAsync<Book?>(
+        var book = await connection.QuerySingleOrDefaultAsync<Book>(
             storedProcedure,
             new { Id = id },
             commandType: CommandType.StoredProcedure);

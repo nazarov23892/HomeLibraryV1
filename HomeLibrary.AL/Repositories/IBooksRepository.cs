@@ -8,6 +8,12 @@ namespace HomeLibrary.AL.Repositories;
 public interface IBooksRepository
 {
     /// <summary>
+    /// Создает книгу.
+    /// </summary>
+    /// <param name="newBook">Модель книги.</param>
+    Task<Book> CreateAsync(Book newBook);
+
+    /// <summary>
     /// Возвращает список книг.
     /// </summary>
     Task<IEnumerable<Book>> GetAllAsync();

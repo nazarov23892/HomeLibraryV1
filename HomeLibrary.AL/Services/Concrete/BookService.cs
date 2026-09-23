@@ -1,5 +1,7 @@
 ﻿using HomeLibrary.AL.DTOs;
+using HomeLibrary.AL.Exceptions;
 using HomeLibrary.AL.Repositories;
+using HomeLibrary.Domain.Entities;
 
 namespace HomeLibrary.AL.Services.Concrete;
 
@@ -9,10 +11,42 @@ namespace HomeLibrary.AL.Services.Concrete;
 public class BookService : IBookService
 {
     readonly IBooksRepository _booksRepository;
+    readonly IAuthorsRepository _authorsRepository;
 
-    public BookService(IBooksRepository booksRepository)
+    public BookService(
+        IBooksRepository booksRepository,
+        IAuthorsRepository authorsRepository)
     {
         _booksRepository = booksRepository;
+        _authorsRepository = authorsRepository;
+    }
+
+    /// <inheritdoc/>
+    public async Task<BookDto> CreateAsync(
+        BookPutDto value, CancellationToken cancellationToken)
+    {
+        var author = await _authorsRepository.FindByNameAsync(
+            value.Author)
+            ?? throw new FailedPreconditionException(
+                $"Author not found.");
+
+        var book = new Book()
+        {
+            Title = value.Title,
+            PublishYear = value.PublishYear,
+            TableOfContents = value.TableOfContents,
+            AuthorId = author.Id,
+        };
+        var createdBook = await _booksRepository.CreateAsync(book);
+        var dto = new BookDto()
+        {
+            Id = createdBook.Id,
+            Title = createdBook.Title,
+            Author = createdBook.Author?.Name ?? string.Empty,
+            PublishYear = createdBook.PublishYear,
+            TableOfContents = createdBook.TableOfContents,
+        };
+        return dto;
     }
 
     /// <inheritdoc/>
@@ -27,7 +61,7 @@ public class BookService : IBookService
                 Title = b.Title,
                 Author = b.Author?.Name ?? string.Empty,
                 PublishYear = b.PublishYear,
-            }).ToList();    
+            }).ToList();
         return dtos;
     }
 
