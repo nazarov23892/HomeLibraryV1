@@ -46,16 +46,17 @@ public static class SeedData
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
+        var no = 0;
         foreach (var author in authors) 
         {
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < count; i++, no++)
             {
                 dbContext.Books.Add(
                     new Book()
                     {
-                        Title = $"book-{1 + i}",
+                        Title = $"book-{1 + no}",
                         AuthorId = author.Id,
-                        PublishYear = 2000 + i,
+                        PublishYear = 2000 + no,
                         TableOfContents = "<root/>",
                     });
             }
