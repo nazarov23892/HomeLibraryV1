@@ -51,12 +51,14 @@ public class BookService : IBookService
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<BookListDto>> GetListAsync(
+    public async Task<PagedListResponseDto<BookListDto>> GetListAsync(
+        int page, 
+        int perPage,
         string? searchString,
         CancellationToken cancellationToken)
     {
-        var books = await _booksRepository.GetAllAsync(searchString);
-        var dtos = books.Select(
+        var pagedBooks = await _booksRepository.GetAllAsync(page, perPage, searchString);
+        var dtos = pagedBooks.Items.Select(
             b => new BookListDto()
             {
                 Id = b.Id,
@@ -64,7 +66,13 @@ public class BookService : IBookService
                 Author = b.Author?.Name ?? string.Empty,
                 PublishYear = b.PublishYear,
             }).ToList();
-        return dtos;
+        var result = new PagedListResponseDto<BookListDto>()
+        {
+            Page = pagedBooks.Page,
+            PerPage = pagedBooks.PerPage,
+            Items = dtos,
+        };
+        return result;
     }
 
     /// <inheritdoc/>

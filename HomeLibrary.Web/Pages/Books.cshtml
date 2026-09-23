@@ -28,7 +28,7 @@
         </a>
     </div>
 
-    @if (!Model.Books.Any())
+    @if (!Model.PagedBooks.Items.Any())
     {
         <div class="alert alert-info">Книг пока нет.</div>
     }
@@ -44,7 +44,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var book in Model.Books)
+                @foreach (var book in Model.PagedBooks.Items)
                 {
                     <tr>
                         <td>@book.Id</td>
@@ -67,8 +67,8 @@
 
     public class BooksModel : PageModel
     {
+        const int PerPage = 10;
         readonly IBookService _bookService;
-        public IEnumerable<BookListDto> Books { get; private set; } = [];
 
         public BooksModel(IBookService bookService)
         {
@@ -78,9 +78,15 @@
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
-        public async Task OnGet(CancellationToken cancellationToken)
+        [BindProperty(SupportsGet = true)]
+        public int PageNo { get; set; } = 1;
+
+        public PagedListResponseDto<BookListDto> PagedBooks { get; private set; } = new();
+
+            public async Task OnGet(CancellationToken cancellationToken)
         {
-            Books = await _bookService.GetListAsync(SearchString, cancellationToken);
+            PagedBooks = await _bookService.GetListAsync(
+                PageNo, PerPage, SearchString, cancellationToken);
         }
     }
 }

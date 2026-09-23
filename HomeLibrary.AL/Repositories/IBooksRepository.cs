@@ -1,4 +1,5 @@
-﻿using HomeLibrary.Domain.Entities;
+﻿using HomeLibrary.AL.DTOs;
+using HomeLibrary.Domain.Entities;
 
 namespace HomeLibrary.AL.Repositories;
 
@@ -16,8 +17,11 @@ public interface IBooksRepository
     /// <summary>
     /// Возвращает список книг.
     /// </summary>
+    /// <param name="page">Номер страницы.</param>
+    /// <param name="perPage">Количество элементов на странице.</param>
     /// <param name="searchString">Строка поиска.</param>
-    Task<IEnumerable<Book>> GetAllAsync(string? searchString);
+    Task<PagedListResponseDto<Book>> GetAllAsync(
+        int page, int perPage, string? searchString);
 
     /// <summary>
     /// Возвращает книгу по Id.

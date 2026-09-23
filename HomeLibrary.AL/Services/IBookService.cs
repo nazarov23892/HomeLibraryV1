@@ -18,9 +18,12 @@ public interface IBookService
     /// <summary>
     /// Возвращает список книг.
     /// </summary>
-    /// <param name="searchString">Строка поиска.</param>
+    /// <param name="page">Номер страницы.</param>
+    /// <param name="perPage">Количество элементов на странице.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    Task<IEnumerable<BookListDto>> GetListAsync(
+    Task<PagedListResponseDto<BookListDto>> GetListAsync(
+        int page, 
+        int perPage,
         string? searchString,
         CancellationToken cancellationToken = default);
 

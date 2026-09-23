@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using HomeLibrary.AL.DTOs;
 using HomeLibrary.AL.Repositories;
 using HomeLibrary.DAL.Models;
 using HomeLibrary.Domain.Entities;
@@ -48,9 +49,16 @@ public class BooksRepository : IBooksRepository
     }
 
     /// <inheritdoc/>>
-    public async Task<IEnumerable<Book>> GetAllAsync(string? searchString)
+    public async Task<PagedListResponseDto<Book>> GetAllAsync(int page, int perPage, string? searchString)
     {
         const string storedProcedure = "Books_Search";
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@PageStartsZero", page - 1);
+        parameters.Add("@PerPage", 10);
+        parameters.Add("@TotalCount", dbType: DbType.Int32, direction: ParameterDirection.Output);
+        parameters.Add("@SearchString", searchString);
+
         await using var connection = new SqlConnection(_options.ConnectionString);
 
         var models = await connection.QueryAsync<Book, Author, Book>(
@@ -61,9 +69,17 @@ public class BooksRepository : IBooksRepository
                 return book;
             },
             splitOn: nameof(Book.AuthorId),
-            param: new { SearchString = searchString, },
+            param: parameters,
             commandType: CommandType.StoredProcedure);
-        return models;
+
+        var result = new PagedListResponseDto<Book>()
+        {
+            Items = models,
+            Page = page,
+            PerPage = perPage,
+            TotalCount = parameters.Get<int>("@TotalCount"),
+        };
+        return result;
     }
 
     /// <inheritdoc/>>
@@ -101,7 +117,7 @@ public class BooksRepository : IBooksRepository
                 book.PublishYear,
                 book.TableOfContents,
                 book.AuthorId,
-            }, 
-            commandType:CommandType.StoredProcedure);
+            },
+            commandType: CommandType.StoredProcedure);
     }
 }
