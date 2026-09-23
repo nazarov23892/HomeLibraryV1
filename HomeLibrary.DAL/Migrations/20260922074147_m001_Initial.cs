@@ -79,9 +79,10 @@ CREATE PROCEDURE [dbo].[Books_GetById]
 	@Id BIGINT
 AS
 BEGIN
-  select
-    b.Id, b.Title, b.PublishYear, b.AuthorId, a.[Name] as AuthorName, a.TableOfContent
+  select top(1)
+    b.Id, b.Title, b.PublishYear, b.AuthorId, a.[Name] as AuthorName, b.TableOfContents
   from Books b left join Authors a on a.Id = b.AuthorId
+  where b.Id = @Id
 END
 ");
         }
