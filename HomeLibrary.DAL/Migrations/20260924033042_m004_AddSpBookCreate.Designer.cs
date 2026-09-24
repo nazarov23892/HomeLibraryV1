@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeLibrary.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260922074147_m001_Initial")]
-    partial class m001_Initial
+    [Migration("20260924033042_m004_AddSpBookCreate")]
+    partial class m004_AddSpBookCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
