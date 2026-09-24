@@ -41,8 +41,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Book.TableOfContents" class="form-label">Оглавление (XML)</label>
-                        <textarea asp-for="Book.TableOfContents" class="form-control" rows="6" readonly disabled></textarea>
+                        <label asp-for="Book.TableOfContents" class="form-label">Оглавление</label>
+                        <div class="form-control bg-light">
+                            @Html.Raw(Model.Book?.TableOfContents)
+                        </div>
                     </div>
                 </div>
 
