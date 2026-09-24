@@ -40,7 +40,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="BookPost.TableOfContents" class="form-label">Оглавление (XML)</label>
+                        <label asp-for="BookPost.TableOfContents" class="form-label">Оглавление</label>
                         <textarea asp-for="BookPost.TableOfContents" class="form-control" rows="6"></textarea>
                     </div>
                 </div>
@@ -53,6 +53,26 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            CKEDITOR.replace('BookPost_TableOfContents', {
+                height: 300,
+                toolbar: [
+                    { name: 'document', items: ['Source'] },
+                    { name: 'styles', items: ['Format'] },
+                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
+                    { name: 'links', items: ['Link', 'Unlink'] }
+                ]
+            });
+        });
+    </script>
+}
 
 @functions {
 
@@ -76,7 +96,13 @@
 
             try
             {
-                _ = await _bookService.CreateAsync(BookPost);
+                var result = await _bookService.CreateAsync(BookPost);
+                if (!result.IsSuccess)
+                {
+                    foreach (var error in result.Errors)
+                        _ = ModelState.TryAddModelError(error.PropertyName, error.Message);
+                    return Page();
+                }
             }
             catch (Exception)
             {

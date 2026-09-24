@@ -13,7 +13,7 @@ public interface IBookService
     /// </summary>
     /// <param name="value">Модель для создания.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    Task<BookDto> CreateAsync(
+    Task<OperationResult> CreateAsync(
         BookPostDto value, CancellationToken cancellationToken = default);
 
     /// <summary>

@@ -29,9 +29,21 @@ public class BookService : IBookService
     }
 
     /// <inheritdoc/>
-    public async Task<BookDto> CreateAsync(
+    public async Task<OperationResult> CreateAsync(
         BookPostDto value, CancellationToken cancellationToken)
     {
+        var tableOfContentsXml = _xmlConverter.ConvertToXml(value.TableOfContents);
+        if (!_xmlValidator.Validate(
+            tableOfContentsXml, out var validationErrorList))
+        {
+            validationErrorList = validationErrorList.Count > 0
+                ? validationErrorList
+                : ["Invalid xml content"];
+
+            return OperationResult.Fail(
+                nameof(value.TableOfContents), validationErrorList);
+        }
+
         var author = await _authorsRepository.FindByNameAsync(
             value.Author);
 
@@ -42,19 +54,11 @@ public class BookService : IBookService
         {
             Title = value.Title,
             PublishYear = value.PublishYear,
-            TableOfContents = value.TableOfContents,
+            TableOfContents = tableOfContentsXml,
             AuthorId = author.Id,
         };
-        var createdBook = await _booksRepository.CreateAsync(book);
-        var dto = new BookDto()
-        {
-            Id = createdBook.Id,
-            Title = createdBook.Title,
-            Author = createdBook.Author?.Name ?? string.Empty,
-            PublishYear = createdBook.PublishYear,
-            TableOfContents = createdBook.TableOfContents,
-        };
-        return dto;
+        _ = await _booksRepository.CreateAsync(book);
+        return OperationResult.Ok(); ;
     }
 
     /// <inheritdoc/>
