@@ -79,11 +79,14 @@
     public class BookCreateModel : PageModel
     {
         readonly IBookService _bookService;
+        readonly IXmlValidator _xmlValidator;
 
         public BookCreateModel(
+            IXmlValidator xmlValidator,
             IBookService bookService)
         {
             _bookService = bookService;
+            _xmlValidator = xmlValidator;
         }
 
         [BindProperty]
@@ -96,6 +99,16 @@
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!_xmlValidator.Validate(
+                Book.TableOfContents, out var validationErrorList))
+            {
+                foreach (var error in validationErrorList)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                if (validationErrorList.Count == 0)
+                    ModelState.AddModelError("", "invalid xml content");
+            }
             if (!ModelState.IsValid)
                 return Page();
 

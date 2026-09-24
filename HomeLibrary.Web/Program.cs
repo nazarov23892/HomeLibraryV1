@@ -23,6 +23,7 @@ builder.Services.Configure<DatabaseOptions>(x => x.ConnectionString = connection
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 builder.Services.AddScoped<IAuthorsRepository, AuthorsRepository>();
+builder.Services.AddScoped<IXmlValidator, XmlValidator>();
 
 builder.Services.AddRazorPages();
 
