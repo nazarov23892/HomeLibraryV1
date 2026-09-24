@@ -58,15 +58,26 @@ DROP PROCEDURE IF EXISTS [dbo].[Books_Search];
 GO
 
 CREATE PROCEDURE [dbo].[Books_Search]
-	@SearchString NVARCHAR(100) = NULL
+    @PageStartsZero int = 0,
+	@PerPage int = 10,
+	@SearchString NVARCHAR(100) = NULL,
+	@TotalCount INT OUTPUT
 AS
 BEGIN
-  select
-    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name]
-  from Books b left join Authors a on a.[Id] = b.AuthorId
-  where @SearchString IS NULL 
+  SELECT @TotalCount = COUNT(*) 
+  FROM Books b inner join Authors a on a.[Id] = b.[AuthorId]
+  WHERE @SearchString IS NULL 
   OR LOWER(b.[Title]) LIKE CONCAT('%', LOWER(@SearchString), '%')
   OR LOWER(a.[Name]) LIKE CONCAT('%', LOWER(@SearchString), '%')
+
+  SELECT
+    b.[Id], b.[Title], b.[PublishYear], b.[AuthorId], a.[Id], a.[Name], COUNT(*) OVER()
+  FROM Books b inner join Authors a on a.[Id] = b.[AuthorId]
+  WHERE @SearchString IS NULL 
+  OR LOWER(b.[Title]) LIKE CONCAT('%', LOWER(@SearchString), '%')
+  OR LOWER(a.[Name]) LIKE CONCAT('%', LOWER(@SearchString), '%')
+  ORDER by  b.[Id]
+  OFFSET @PageStartsZero * @PerPage  ROWS FETCH NEXT @PerPage ROWS ONLY
 END
 ");
 
