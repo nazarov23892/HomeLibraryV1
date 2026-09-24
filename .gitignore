@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /HomeLibrary.Web/appsettings.Development.json
 /HomeLibrary.Web/wwwroot/lib/bootstrap
 /HomeLibrary.Web/wwwroot/lib/ckeditor5
+/HomeLibrary.Web/wwwroot/lib

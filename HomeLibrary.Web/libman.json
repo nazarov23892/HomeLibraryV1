@@ -5,6 +5,14 @@
     {
       "library": "bootstrap@5.3.8",
       "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "ckeditor@4.22.1",
+      "destination": "wwwroot/lib/ckeditor/"
+    },
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/lib/jquery/"
     }
   ]
 }

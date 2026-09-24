@@ -54,6 +54,26 @@
     </div>
 </div>
 
+@section Scripts {
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/ckeditor/ckeditor.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            CKEDITOR.replace('Book_TableOfContents', {
+                height: 300,
+                toolbar: [
+                    { name: 'document', items: ['Source'] },
+                    { name: 'styles', items: ['Format'] },
+                    { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline'] },
+                    { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
+                    { name: 'links', items: ['Link', 'Unlink'] }
+                ]
+            });
+        });
+    </script>
+}
+
 @functions {
 
     public class BookCreateModel : PageModel
