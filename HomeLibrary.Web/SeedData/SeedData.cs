@@ -46,18 +46,54 @@ public static class SeedData
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        var no = 0;
+        var bookNo = 0;
         foreach (var author in authors) 
         {
-            for (var i = 0; i < count; i++, no++)
+            for (var i = 0; i < count; i++, bookNo++)
             {
+                var bookTitle = $"book-{1 + bookNo}";
+                var tableOfContent =
+$"""
+<content>
+<h5>Part I. The Beginning{bookNo}</h5>
+<ul>
+    <li>Chapter{bookNo}1. — {bookNo + 7}</li>
+    <li>Chapter{bookNo}2. — {bookNo + 23}</li>
+    <li>Chapter{bookNo}3. — {bookNo + 41}</li>
+</ul>
+
+<h5>Part II. The Journey{bookNo}</h5>
+<ul>
+    <li>Chapter{bookNo}4. TheNorthWind{bookNo} — {bookNo + 59}</li>
+    <li>
+        Chapter{bookNo}5. TheMapThatExist{bookNo} — {bookNo + 78}
+        <ul>
+            <li>5.1. TheOldCaretaker{bookNo} — {bookNo + 85}</li>
+            <li>5.2. TheUndergroundPassage{bookNo} — {bookNo + 94}</li>
+        </ul>
+    </li>
+    <li>Chapter{bookNo}6. ShadowsofDepartedCities{bookNo} — {bookNo + 112}</li>
+</ul>
+
+<h5>Part III. The Return{bookNo}</h5>
+<ul>
+    <li>Chapter{bookNo}7. TheLongRoadHome{bookNo} — {bookNo + 143}</li>
+    <li>Chapter{bookNo}8. Epilogue{bookNo} — {bookNo + 167}</li>
+</ul>
+<ul>
+    <li>AboutTheAuthor{author.Id} {author.Name} — {bookNo + 189}</li>
+</ul>
+</content>
+""";
+
+
                 dbContext.Books.Add(
                     new Book()
                     {
-                        Title = $"book-{1 + no}",
+                        Title = bookTitle,
                         AuthorId = author.Id,
-                        PublishYear = 2000 + no,
-                        TableOfContents = "<root/>",
+                        PublishYear = 2000 + bookNo,
+                        TableOfContents = tableOfContent,
                     });
             }
         }
