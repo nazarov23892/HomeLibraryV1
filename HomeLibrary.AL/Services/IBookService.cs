@@ -1,4 +1,5 @@
 ﻿using HomeLibrary.AL.DTOs;
+using HomeLibrary.AL.Models;
 
 namespace HomeLibrary.AL.Services;
 
@@ -41,6 +42,8 @@ public interface IBookService
     /// <param name="id">Id.</param>
     /// <param name="value">Модель для обновления.</param>
     /// <param name="cancellationToken">Токен отмены операции.</param>
-    Task UpdateAsync(
-        long id, BookPutDto value, CancellationToken cancellationToken = default);
+    Task<OperationResult> UpdateAsync(
+        long id, 
+        BookPutDto value,
+        CancellationToken cancellationToken = default);
 }

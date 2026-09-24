@@ -1,5 +1,6 @@
 ﻿using HomeLibrary.AL.DTOs;
 using HomeLibrary.AL.Exceptions;
+using HomeLibrary.AL.Models;
 using HomeLibrary.AL.Repositories;
 using HomeLibrary.Domain.Entities;
 
@@ -12,13 +13,19 @@ public class BookService : IBookService
 {
     readonly IBooksRepository _booksRepository;
     readonly IAuthorsRepository _authorsRepository;
+    readonly IXmlConverter _xmlConverter;
+    readonly IXmlValidator _xmlValidator;
 
     public BookService(
         IBooksRepository booksRepository,
-        IAuthorsRepository authorsRepository)
+        IAuthorsRepository authorsRepository,
+        IXmlValidator xmlValidator,
+        IXmlConverter xmlConverter)
     {
         _booksRepository = booksRepository;
         _authorsRepository = authorsRepository;
+        _xmlConverter = xmlConverter;
+        _xmlValidator = xmlValidator;
     }
 
     /// <inheritdoc/>
@@ -52,7 +59,7 @@ public class BookService : IBookService
 
     /// <inheritdoc/>
     public async Task<PagedListResponseDto<BookListDto>> GetListAsync(
-        int page, 
+        int page,
         int perPage,
         string? searchString,
         CancellationToken cancellationToken)
@@ -82,21 +89,37 @@ public class BookService : IBookService
     {
         var book = await _booksRepository.GetByIdAsync(id)
             ?? throw new NotFoundException($"Book {id} not found.");
+
+        var tableOfContents = _xmlConverter.ConvertFromXml(book.TableOfContents);
         var dto = new BookDto()
         {
             Id = book.Id,
             Title = book.Title,
             Author = book.Author?.Name ?? string.Empty,
             PublishYear = book.PublishYear,
-            TableOfContents = book.TableOfContents,
+            TableOfContents = tableOfContents,
         };
         return dto;
     }
 
     /// <inheritdoc/>
-    public async Task UpdateAsync(
-        long id, BookPutDto value, CancellationToken cancellationToken = default)
+    public async Task<OperationResult> UpdateAsync(
+        long id,
+        BookPutDto value,
+        CancellationToken cancellationToken = default)
     {
+        var tableOfContentsXml = _xmlConverter.ConvertToXml(value.TableOfContents);
+        if (!_xmlValidator.Validate(
+            tableOfContentsXml, out var validationErrorList))
+        {
+            validationErrorList = validationErrorList.Count > 0
+                ? validationErrorList
+                : ["Invalid xml content"];
+
+            return OperationResult.Fail(
+                nameof(value.TableOfContents), validationErrorList);
+        }
+
         var author = await _authorsRepository.FindByNameAsync(
             value.Author);
 
@@ -108,9 +131,10 @@ public class BookService : IBookService
             Id = id,
             Title = value.Title,
             PublishYear = value.PublishYear,
-            TableOfContents = value.TableOfContents,
+            TableOfContents = tableOfContentsXml,
             AuthorId = author.Id,
         };
         await _booksRepository.UpdateAsync(book);
+        return OperationResult.Ok();
     }
 }
