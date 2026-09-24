@@ -98,9 +98,10 @@ public class BookService : IBookService
         long id, BookPutDto value, CancellationToken cancellationToken = default)
     {
         var author = await _authorsRepository.FindByNameAsync(
-            value.Author)
-            ?? throw new FailedPreconditionException(
-                $"Author not found.");
+            value.Author);
+
+        author ??= await _authorsRepository.CreateAsync(
+                new Author() { Name = value.Author });
 
         var book = new Book()
         {
