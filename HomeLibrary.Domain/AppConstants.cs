@@ -12,4 +12,6 @@ public static class AppConstants
 
     public const int PublishYearMinValue = 1500;
     public const int PublishYearMaxValue = 2999;
+
+    public const int SearchStringMaxLength = 64;
 }
