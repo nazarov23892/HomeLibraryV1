@@ -10,5 +10,7 @@ public class PagedListResponseDto<T>
     public int TotalCount { get; set; }
     public int Page { get; set; }
     public int PerPage { get; set; }
-    public int TotalPages => (TotalCount / PerPage) + (TotalCount % PerPage > 0 ? 1 : 0);
+    public int TotalPages => PerPage <= 0
+        ? 0
+        : (TotalCount / PerPage) + (TotalCount % PerPage > 0 ? 1 : 0);
 }
