@@ -38,6 +38,7 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.MigrateAsync();
     await SeedData.RunSeed(dbContext, authorsCount: 5, booksCount: 10, logger);
 }
 
