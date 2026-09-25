@@ -120,4 +120,19 @@ public class BooksRepository : IBooksRepository
             },
             commandType: CommandType.StoredProcedure);
     }
+
+    /// <inheritdoc/>>
+    public async Task DeleteAsync(long id)
+    {
+        const string storedProcedure = "Books_Delete";
+        await using var connection = new SqlConnection(_options.ConnectionString);
+
+        var result = await connection.QuerySingleAsync(
+            storedProcedure,
+            param: new
+            {
+                Id = id,
+            },
+            commandType: CommandType.StoredProcedure);
+    }
 }

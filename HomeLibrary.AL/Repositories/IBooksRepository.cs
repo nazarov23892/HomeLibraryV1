@@ -34,4 +34,10 @@ public interface IBooksRepository
     /// </summary>
     /// <param name="book">Модель книги.</param>
     Task UpdateAsync(Book book);
+
+    /// <summary>
+    /// Удаляет книгу.
+    /// </summary>
+    /// <param name="id">Идентификатор.</param>
+    Task DeleteAsync(long id);
 }

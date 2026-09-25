@@ -54,10 +54,16 @@
                         <td>@book.Author</td>
                         <td>@book.PublishYear</td>
                         <td class="w-25">
-                            <a class="btn btn-outline-info btn-sm"
-                               asp-page="BookDetails" asp-route-id="@book.Id">Просмотр</a>
-                            <a class="btn btn-outline-warning btn-sm"
-                               asp-page="BookEdit" asp-route-id="@book.Id">Редактировать</a>
+                            <form method="post" 
+                                asp-page-handler="Remove"
+                                  onsubmit="return confirm('Книга будет удалена. Продолжить?');">
+                                <input type="hidden" name="id" value="@book.Id" />
+                                <a class="btn btn-outline-info btn-sm"
+                                   asp-page="BookDetails" asp-route-id="@book.Id">Просмотр</a>
+                                <a class="btn btn-outline-warning btn-sm"
+                                   asp-page="BookEdit" asp-route-id="@book.Id">Изменить</a>
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -103,6 +109,12 @@
         {
             PagedBooks = await _bookService.GetListAsync(
                 PageNo, PerPage, SearchString, cancellationToken);
+        }
+
+        public async Task<IActionResult> OnPostRemove(long id)
+        {
+            await _bookService.DeleteAsync(id);
+            return RedirectToPage("Books");
         }
     }
 }

@@ -46,4 +46,11 @@ public interface IBookService
         long id, 
         BookPutDto value,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Удаляет книгу.
+    /// </summary>
+    /// <param name="id">Id.</param>
+    /// <param name="cancellationToken">Токен отмены операции.</param>
+    Task DeleteAsync(long id, CancellationToken cancellationToken = default);
 }

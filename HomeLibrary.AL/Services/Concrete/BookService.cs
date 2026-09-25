@@ -141,4 +141,8 @@ public class BookService : IBookService
         await _booksRepository.UpdateAsync(book);
         return OperationResult.Ok();
     }
+
+    /// <inheritdoc/>
+    public  Task DeleteAsync(long id, CancellationToken cancellationToken = default)
+        => _booksRepository.DeleteAsync(id);
 }
